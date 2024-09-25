@@ -1,0 +1,190 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Produto {
+    private String codigo;
+    private String nome;
+    private boolean ativo;
+    private double preco;
+
+    public Produto(String codigo, String nome, double preco) {
+        this.codigo = codigo.toUpperCase();
+        this.nome = nome.toUpperCase(); 
+        this.ativo = true;
+        this.preco = preco;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public String toString() {
+        return String.format("%s\t\t%s\t\tR$%.2f", codigo, nome, preco);
+    }
+}
+
+class Cliente {
+    private String nome;
+    private String endereco;
+    private String telefone;
+    private String email;
+    private String dataNascimento;
+
+    public Cliente(String nome, String endereco, String telefone, String email, String dataNascimento) {
+        this.nome = nome.toUpperCase();
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.email = email;
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String toString() {
+        return String.format("Nome: %s, Endereço: %s, Telefone: %s, Email: %s, Nascimento: %s",
+                nome, endereco, telefone, email, dataNascimento);
+    }
+
+}
+
+public class SistemaCardapio {
+    private List<Produto> produtos;
+    private List<Cliente> clientes;
+
+    public SistemaCardapio() {
+        produtos = new ArrayList<>();
+        clientes = new ArrayList<>();
+    }
+
+    public void cadastrarProduto(String codigo, String nome, double preco) {
+        if (codigo.length() != 6 || nome.length() < 3 || nome.length() > 60 || preco <= 0) {
+            System.out.println("Erro: Dados inválidos.");
+            return;
+        }
+        produtos.add(new Produto(codigo, nome, preco));
+        System.out.println("Produto cadastrado com sucesso!");
+    }
+
+    public void listarProdutos() {
+        System.out.println("Código\t\tProduto\t\tValor");
+        System.out.println("---------------------------------------");
+        for (Produto produto : produtos) {
+            if (produto.isAtivo()) {
+                System.out.println(produto);
+            }
+        }
+    }
+
+    public void excluirProduto(String codigo) {
+        for (Produto produto : produtos) {
+            if (produto.getCodigo().equals(codigo)) {
+                produto.setAtivo(false);
+                System.out.println("Produto excluído com sucesso!");
+                return;
+            }
+        }
+        System.out.println("Produto não encontrado.");
+    }
+
+    public void cadastrarCliente(String nome, String endereco, String telefone, String email, String dataNascimento) {
+        if (nome.length() < 6 || nome.length() > 60 || !isAdult(dataNascimento)) {
+            System.out.println("Erro: Dados inválidos.");
+            return;
+        }
+        clientes.add(new Cliente(nome, endereco, telefone, email, dataNascimento));
+        System.out.println("Cliente cadastrado com sucesso!");
+    }
+
+    public void listarClientes() {
+        System.out.println("Lista de Clientes:");
+        for (Cliente cliente : clientes) {
+            System.out.println(cliente);
+        }
+    }
+
+    private boolean isAdult(String dataNascimento) {
+        return true;
+    }
+
+    public static void main(String[] args) {
+        SistemaCardapio sistema = new SistemaCardapio();
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Cadastrar Produto");
+            System.out.println("2. Listar Produtos");
+            System.out.println("3. Excluir Produto");
+            System.out.println("4. Cadastrar Cliente");
+            System.out.println("5. Listar Clientes");
+            System.out.println("6. Fechar");
+            System.out.print("Escolha uma opção: ");
+            
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    System.out.print("Código: ");
+                    String codigo = scanner.nextLine();
+                    System.out.print("Nome do Produto: ");
+                    String nome = scanner.nextLine();
+                    System.out.print("Preço: ");
+                    double preco = scanner.nextDouble();
+                    sistema.cadastrarProduto(codigo, nome, preco);
+                    break;
+
+                case 2:
+                    sistema.listarProdutos();
+                    break;
+
+                case 3:
+                    System.out.print("Código do Produto a ser excluído: ");
+                    String codigoExcluir = scanner.nextLine();
+                    sistema.excluirProduto(codigoExcluir);
+                    break;
+
+                case 4:
+                    System.out.print("Nome do Cliente: ");
+                    String nomeCliente = scanner.nextLine();
+                    System.out.print("Endereço: ");
+                    String enderecoCliente = scanner.nextLine();
+                    System.out.print("Telefone: ");
+                    String telefoneCliente = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String emailCliente = scanner.nextLine();
+                    System.out.print("Data de Nascimento (dd/mm/aaaa): ");
+                    String dataNascimento = scanner.nextLine();
+                    sistema.cadastrarCliente(nomeCliente, enderecoCliente, telefoneCliente, emailCliente, dataNascimento);
+                    break;
+
+                case 5:
+                    sistema.listarClientes();
+                    break;
+
+                case 6:
+                    System.out.println("Fechando.");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+    }
+}
