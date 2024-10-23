@@ -1,5 +1,7 @@
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SistemaPessoa {
 
@@ -63,7 +65,78 @@ public class SistemaPessoa {
         footerPanel.add(new JLabel("Data de acesso: 20/09/2024 10:58"));
         mainWindow.add(footerPanel, BorderLayout.SOUTH);
 
+        // Add action to "Usuários" menu item to open the user registration window
+        usuariosItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openUserRegistrationWindow();
+            }
+        });
+
         // Make the main window visible
         mainWindow.setVisible(true);
+    }
+
+    // Method to open the User Registration Window
+    private static void openUserRegistrationWindow() {
+        // Create a new JFrame for the "Cadastro de Usuários" window
+        JFrame userWindow = new JFrame("Cadastro de Usuários");
+        userWindow.setSize(400, 300);
+        userWindow.setLocationRelativeTo(null);
+
+        // Create a panel for user registration form
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Create form components
+        JLabel userLabel = new JLabel("Usuário:");
+        JTextField userField = new JTextField();
+        JLabel passwordLabel = new JLabel("Senha:");
+        JPasswordField passwordField = new JPasswordField();
+        JLabel emailLabel = new JLabel("Email:");
+        JTextField emailField = new JTextField();
+        JLabel activeLabel = new JLabel("Ativo:");
+        JCheckBox activeCheckBox = new JCheckBox();
+
+        // Add form components to the panel
+        formPanel.add(userLabel);
+        formPanel.add(userField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+        formPanel.add(activeLabel);
+        formPanel.add(activeCheckBox);
+
+        // Create button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        String[] buttons = {"Incluir", "Alterar", "Excluir", "Consultar", "Cancelar", "Sair"};
+        for (String buttonName : buttons) {
+            JButton button = new JButton(buttonName);
+            buttonPanel.add(button);
+
+            // Add action listener for each button
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (buttonName.equals("Sair")) {
+                        userWindow.dispose(); // Close the registration window
+                    } else {
+                        JOptionPane.showMessageDialog(userWindow,
+                                "Botão clicado! - " + buttonName,
+                                "Informação",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            });
+        }
+
+        // Add the form panel and button panel to the user window
+        userWindow.add(formPanel, BorderLayout.CENTER);
+        userWindow.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Make the user registration window visible
+        userWindow.setVisible(true);
     }
 }
